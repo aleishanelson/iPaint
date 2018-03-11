@@ -25,10 +25,9 @@ import java.awt.Dimension;
 
 public class ApplicationFrame extends JFrame
 {
-
 	private JLabel stausLabel; //label display mouse coordinates
-    private JButton undo, redo, clear; // buttons to undo, redo last shape drawn and to clear the canvas
-    private JButton jbRect, jbEllipse, jbLine, jbText;  //buttons for selecting which shape the user wants to draw
+    private JButton undo, redo, clear, selectShape; // buttons to undo, redo last shape drawn and to clear the canvas
+    private JButton jbRect, jbEllipse, jbLine, jbText, jbSquare, jbCircle, jbTriangle;  //buttons for selecting which shape the user wants to draw
     private JComboBox colors; //combobox with color options 
     private JCheckBox fillCheckBox; //checkbox to select whether or not to fill a shape with color
     private JLabel colorLabel;
@@ -50,7 +49,7 @@ public class ApplicationFrame extends JFrame
     		"Green", "Orange", "Red", "Pink", "Light Gray","Dark Gray","Gray"};
 
     //array of strings containing shape options for JComboBox shapes
-    private String shapeOptions[]={"Line","Rectangle","Ellipse", "Text"};
+    private String shapeOptions[]={"Line","Rectangle","Ellipse", "Text", "Circle", "Square", "Triangle"};
     
     /**
      * CONSTRUCTOR for JFrame/Application
@@ -84,6 +83,10 @@ public class ApplicationFrame extends JFrame
         jbLine.setIcon(JBicons.lineII);
         jbText = new JButton("Text");
         jbText.setIcon(JBicons.textII);
+        selectShape = new JButton("Recolor Shape");
+        jbCircle = new JButton("Circle");
+        jbSquare = new JButton("Square");
+        	jbTriangle = new JButton("Triangle");
         
         //create color combobox and label for it
         colorLabel = new JLabel("<html>Select Shape<br>Fill Color:</html>");
@@ -102,15 +105,19 @@ public class ApplicationFrame extends JFrame
             
         // add widgets to widgetJPanel
         toolboxPanel.add( undo );
-        toolboxPanel.add( redo ); 
-        toolboxPanel.add(colorLabel);
-        toolboxPanel.add( colors );
-        toolboxPanel.add( fillCheckBox );
-        toolboxPanel.add( clear );
+        toolboxPanel.add( redo );  
         toolboxPanel.add( jbRect );
         toolboxPanel.add(jbEllipse);
         toolboxPanel.add(jbLine);
         toolboxPanel.add(jbText);
+        toolboxPanel.add(jbCircle);
+        toolboxPanel.add( clear );
+        toolboxPanel.add(colorLabel);
+        toolboxPanel.add( colors );
+        toolboxPanel.add( fillCheckBox );
+        toolboxPanel.add(selectShape);
+        toolboxPanel.add(jbSquare);
+        toolboxPanel.add(jbTriangle);
         
         // add toolbox to its padding panel
         toolboxPadding.add( toolboxPanel );
@@ -128,6 +135,9 @@ public class ApplicationFrame extends JFrame
         jbEllipse.addActionListener( buttonHandler );
         jbLine.addActionListener( buttonHandler );
         jbText.addActionListener( buttonHandler );
+        jbSquare.addActionListener(buttonHandler);
+        jbCircle.addActionListener(buttonHandler);
+        jbTriangle.addActionListener(buttonHandler);
         
         //create handlers for color combobox and filled checkbox
         ItemListenerHandler handler = new ItemListenerHandler();
@@ -168,7 +178,16 @@ public class ApplicationFrame extends JFrame
             }
             else if (event.getActionCommand().equals("Text")){
                 canvas.setCurrentShapeType(3);
-            }   
+            }  
+            else if (event.getActionCommand().equals("Circle")){
+                canvas.setCurrentShapeType(4);
+            }  
+            else if (event.getActionCommand().equals("Square")){
+                canvas.setCurrentShapeType(5);
+            }  
+            else if (event.getActionCommand().equals("Triangle")){
+                canvas.setCurrentShapeType(6);
+            }  
              
         } // end method actionPerformed
     } // end private inner class ButtonHandler
