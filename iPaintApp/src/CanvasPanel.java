@@ -157,6 +157,24 @@ public class CanvasPanel extends JPanel
                     currentShapeObject= new Ellipse( event.getX(), event.getY(), 
                                                    event.getX(), event.getY(), currentShapeColor, currentShapeFilled);
                     break;
+                /*case 3:
+                    currentShapeObject= new Text();
+                    break; */
+                case 4:
+                    currentShapeObject= new Circle( event.getX(), event.getY(), 
+                                                   event.getX(), event.getY(), currentShapeColor, currentShapeFilled);
+                    break;
+                case 5:
+                    currentShapeObject= new Square( event.getX(), event.getY(), 
+                                                   event.getX(), event.getY(), currentShapeColor, currentShapeFilled);
+                    break;
+               
+                    /*
+                case 6:
+                    currentShapeObject= new Triangle( event.getX(), event.getY(), 
+                                                   event.getX(), event.getY(), currentShapeColor, currentShapeFilled);
+                    break;
+                    */
                     
             }// end switch case
         } // end method mousePressed
