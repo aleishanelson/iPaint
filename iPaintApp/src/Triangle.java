@@ -1,15 +1,10 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Polygon;
 
-/**
- * This class inherits from MyBoundedShape and is responsible for drawing a rectangle
- */
+//Triangle class inherits methods from ShapeBounds in order to draw a traingle with the correct bounds 
 public class Triangle extends ShapeBounds
-{ 
-	
-	private int triangleWidth;
-	private int triangleHeight;
-    
+{   
 	//Constructor
     public Triangle()
     {
@@ -27,19 +22,17 @@ public class Triangle extends ShapeBounds
     @Override
     public void draw( Graphics g )
     {
-    	/*
-    		triangleWidth = getWidth();
-		triangleHeight = getHeight();
-		triangleWidth = triangleHeight;   //set height and width equal to eachother to create a symmetric rectangle - aka a square
-    		*/
+    		int x[] = {getX1(),  getX2(), getX2()};
+    		int y[] = { getY1(), getY1(), getY2()};
+    		int n = 3;
+    		Polygon p = new Polygon(x, y, n);
     	
         g.setColor( getColor() ); //sets the color
         if (getFill()) { //determines whether fill is true or false
-        		//g.fillPolygon(getUpperLeftX(), getUpperLeftY(), 3);
-           // g.fillRect( getUpperLeftX(), getUpperLeftY(), getWidth(), getHeight() ); //draws a filled rectangle
-    			}
+        		g.fillPolygon(p);
+	}
     		else {
-        		//g.drawPolyline(xPoints, yPoints, 3);  		
+        		g.drawPolygon(p);  		
 		} 
     
     }

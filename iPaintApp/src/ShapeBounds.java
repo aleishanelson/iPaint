@@ -19,6 +19,7 @@ abstract class ShapeBounds extends Shape
     {
         super(x1, y1, x2, y2, color);
         this.fill=fill;
+        
     }
     
     //MUTATORS
