@@ -39,14 +39,14 @@ public class ApplicationFrame extends JFrame
     private Icons JBicons;
     
   //array holding the different color options for filling a shape
-    private Color colorsArray[]= {Color.BLACK , Color.WHITE , Color.MAGENTA , Color.BLUE , Color.CYAN , Color.GREEN, Color.YELLOW, 
-    		Color.ORANGE , Color.RED , Color.PINK , Color.darkGray , Color.GRAY , 
-         Color.lightGray };
+    private Color colorsArray[]= {Color.BLACK , Color.WHITE , Color.MAGENTA , Color.BLUE , 
+    		Color.CYAN , Color.GREEN, Color.YELLOW, 
+    		Color.ORANGE , Color.RED , Color.PINK , Color.lightGray , Color.darkGray , Color.GRAY };
     
     //array of strings containing color options for JComboBox colors
     private String colorMenu[]=
     {"Black", "White", "Magenta", "Blue","Cyan", "Green", "Yellow", 
-    		"Green", "Orange", "Red", "Pink", "Light Gray","Dark Gray","Gray"};
+    		 "Orange", "Red", "Pink", "Light Gray","Dark Gray","Gray"};
 
     //array of strings containing shape options for JComboBox shapes
     private String shapeOptions[]={"Line","Rectangle","Ellipse", "Text", "Circle", "Square", "Triangle"};

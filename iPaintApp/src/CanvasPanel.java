@@ -32,7 +32,7 @@ public class CanvasPanel extends JPanel
         clearedShapes = new LinkedList<Shape>(); //initialize clearedShapes dynamic stack
         
         //Initialize current Shape variables
-        //currentShapeType=1;
+        currentShapeType=1;
         currentShapeObject=null;
         currentShapeColor=Color.BLACK;
         currentShapeFilled=false;
@@ -169,12 +169,12 @@ public class CanvasPanel extends JPanel
                                                    event.getX(), event.getY(), currentShapeColor, currentShapeFilled);
                     break;
                
-                    /*
+                    
                 case 6:
                     currentShapeObject= new Triangle( event.getX(), event.getY(), 
                                                    event.getX(), event.getY(), currentShapeColor, currentShapeFilled);
                     break;
-                    */
+                    
                     
             }// end switch case
         } // end method mousePressed
