@@ -1,3 +1,5 @@
+package iPaintApp.src;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -10,6 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,6 +23,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -27,7 +31,7 @@ public class ApplicationFrame extends JFrame
 {
 	private JLabel stausLabel; //label display mouse coordinates
     private JButton undo, redo, clear, selectShape; // buttons to undo, redo last shape drawn and to clear the canvas
-    private JButton jbRect, jbEllipse, jbLine, jbText, jbSquare, jbCircle, jbTriangle;  //buttons for selecting which shape the user wants to draw
+    private JButton jbRect, jbEllipse, jbLine, jbText, jbSquare, jbCircle, jbTriangle, jbSave;  //buttons for selecting which shape the user wants to draw
     private JComboBox colors; //combobox with color options 
     private JCheckBox fillCheckBox; //checkbox to select whether or not to fill a shape with color
     private JLabel colorLabel;
@@ -39,14 +43,14 @@ public class ApplicationFrame extends JFrame
     private Icons JBicons;
     
   //array holding the different color options for filling a shape
-    private Color colorsArray[]= {Color.BLACK , Color.WHITE , Color.MAGENTA , Color.BLUE , 
-    		Color.CYAN , Color.GREEN, Color.YELLOW, 
-    		Color.ORANGE , Color.RED , Color.PINK , Color.lightGray , Color.darkGray , Color.GRAY };
+    private Color colorsArray[]= {Color.BLACK , Color.WHITE , Color.MAGENTA , Color.BLUE , Color.CYAN , Color.GREEN, Color.YELLOW, 
+    		Color.ORANGE , Color.RED , Color.PINK , Color.darkGray , Color.GRAY , 
+         Color.lightGray };
     
     //array of strings containing color options for JComboBox colors
     private String colorMenu[]=
     {"Black", "White", "Magenta", "Blue","Cyan", "Green", "Yellow", 
-    		 "Orange", "Red", "Pink", "Light Gray","Dark Gray","Gray"};
+    		"Green", "Orange", "Red", "Pink", "Light Gray","Dark Gray","Gray"};
 
     //array of strings containing shape options for JComboBox shapes
     private String shapeOptions[]={"Line","Rectangle","Ellipse", "Text", "Circle", "Square", "Triangle"};
@@ -87,6 +91,7 @@ public class ApplicationFrame extends JFrame
         jbCircle = new JButton("Circle");
         jbSquare = new JButton("Square");
         	jbTriangle = new JButton("Triangle");
+        	jbSave = new JButton("Save");
         
         //create color combobox and label for it
         colorLabel = new JLabel("<html>Select Shape<br>Fill Color:</html>");
@@ -118,6 +123,7 @@ public class ApplicationFrame extends JFrame
         toolboxPanel.add(selectShape);
         toolboxPanel.add(jbSquare);
         toolboxPanel.add(jbTriangle);
+        toolboxPanel.add(jbSave);
         
         // add toolbox to its padding panel
         toolboxPadding.add( toolboxPanel );
@@ -139,6 +145,7 @@ public class ApplicationFrame extends JFrame
         jbCircle.addActionListener(buttonHandler);
         jbTriangle.addActionListener(buttonHandler);
         
+        jbSave.addActionListener(buttonHandler);
         //create handlers for color combobox and filled checkbox
         ItemListenerHandler handler = new ItemListenerHandler();
         colors.addItemListener( handler );
@@ -188,6 +195,9 @@ public class ApplicationFrame extends JFrame
             else if (event.getActionCommand().equals("Triangle")){
                 canvas.setCurrentShapeType(6);
             }  
+            else if (event.getActionCommand().equals("Save")){
+                savePaint();
+            } 
              
         } // end method actionPerformed
     } // end private inner class ButtonHandler
@@ -220,5 +230,21 @@ public class ApplicationFrame extends JFrame
             
         } // end method itemStateChanged
     }
+
+	public void savePaint() {
+		// TODO Auto-generated method stub
+		try
+        {
+            BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics2D = image.createGraphics();
+            canvas.paint(graphics2D);
+            ImageIO.write(image,"jpeg", new File("/Users/surajmadkar/Desktop/SavePaintTest.jpeg"));
+        }
+        catch(Exception exception)
+        {
+            System.out.println(exception);
+        }
+		
+	}
     
 } // end class DrawFrame
