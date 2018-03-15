@@ -1,4 +1,3 @@
-package iPaintApp.src;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -81,18 +80,23 @@ public class ApplicationFrame extends JFrame
         clear = new JButton("Clear");
         clear.setIcon(JBicons.clearII);
         jbRect = new JButton("Rectangle");
-        jbRect.setIcon(JBicons.squareII);
+        jbRect.setIcon(JBicons.rectangleII);
+        jbSquare = new JButton("Square");
+        jbSquare.setIcon(JBicons.squareII);
         jbEllipse = new JButton("Ellipse");
-        jbEllipse.setIcon(JBicons.circleII);
+        jbEllipse.setIcon(JBicons.ellipseII);
+        jbCircle = new JButton("Circle");
+        jbCircle.setIcon(JBicons.circleII);
         jbLine = new JButton("Line");
         jbLine.setIcon(JBicons.lineII);
         jbText = new JButton("Text");
         jbText.setIcon(JBicons.textII);
         selectShape = new JButton("Recolor Shape");
-        jbCircle = new JButton("Circle");
-        jbSquare = new JButton("Square");
         	jbTriangle = new JButton("Triangle");
+        	jbTriangle.setIcon(JBicons.triangleII);
         	jbSave = new JButton("Save");
+        	jbSave.setIcon(JBicons.saveII);
+        	
         
         //create color combobox and label for it
         colorLabel = new JLabel("<html>Select Shape<br>Fill Color:</html>");
@@ -110,21 +114,22 @@ public class ApplicationFrame extends JFrame
         toolboxPadding.setLayout(new FlowLayout(FlowLayout.LEADING, 20, 5)); //sets padding around the edges
             
         // add widgets to widgetJPanel
-        toolboxPanel.add( undo );
-        toolboxPanel.add( redo );  
+        toolboxPanel.add(jbSave);
+        toolboxPanel.add( undo );   
         toolboxPanel.add( jbRect );
+        toolboxPanel.add(jbSquare);
         toolboxPanel.add(jbEllipse);
-        toolboxPanel.add(jbLine);
-        toolboxPanel.add(jbText);
         toolboxPanel.add(jbCircle);
+        toolboxPanel.add(jbTriangle);
+        toolboxPanel.add(jbLine); 
         toolboxPanel.add( clear );
+        toolboxPanel.add( redo ); 
+        toolboxPanel.add(jbText);
         toolboxPanel.add(colorLabel);
         toolboxPanel.add( colors );
         toolboxPanel.add( fillCheckBox );
-        toolboxPanel.add(selectShape);
-        toolboxPanel.add(jbSquare);
-        toolboxPanel.add(jbTriangle);
-        toolboxPanel.add(jbSave);
+        toolboxPanel.add(selectShape); 
+       
         
         // add toolbox to its padding panel
         toolboxPadding.add( toolboxPanel );
@@ -239,7 +244,7 @@ public class ApplicationFrame extends JFrame
             BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
             Graphics2D graphics2D = image.createGraphics();
             canvas.paint(graphics2D);
-            ImageIO.write(image,"jpeg", new File("/Users/surajmadkar/Desktop/SavePaintTest.jpeg"));
+            ImageIO.write(image,"jpeg", new File("/Users/aleishanelson/Desktop/SavePaintTest.jpeg"));
         }
         catch(Exception exception)
         {
