@@ -1,3 +1,4 @@
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -10,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -27,7 +30,7 @@ public class ApplicationFrame extends JFrame
 {
 	private JLabel stausLabel; //label display mouse coordinates
     private JButton undo, redo, clear, selectShape; // buttons to undo, redo last shape drawn and to clear the canvas
-    private JButton jbRect, jbEllipse, jbLine, jbText, jbSquare, jbCircle, jbTriangle;  //buttons for selecting which shape the user wants to draw
+    private JButton jbRect, jbEllipse, jbLine, jbText, jbSquare, jbCircle, jbTriangle, jbSave;  //buttons for selecting which shape the user wants to draw
     private JComboBox colors; //combobox with color options 
     private JCheckBox fillCheckBox; //checkbox to select whether or not to fill a shape with color
     private JLabel colorLabel;
@@ -39,9 +42,10 @@ public class ApplicationFrame extends JFrame
     private Icons JBicons;
     
   //array holding the different color options for filling a shape
-    private Color colorsArray[]= {Color.BLACK , Color.WHITE , Color.MAGENTA , Color.BLUE , 
-    		Color.CYAN , Color.GREEN, Color.YELLOW, 
-    		Color.ORANGE , Color.RED , Color.PINK , Color.lightGray , Color.darkGray , Color.GRAY };
+    private Color colorsArray[]= {Color.BLACK , Color.WHITE , Color.MAGENTA ,
+    		Color.BLUE , Color.CYAN , Color.GREEN, Color.YELLOW, 
+    		Color.ORANGE , Color.RED , Color.PINK , Color.lightGray, Color.darkGray , Color.GRAY  
+          };
     
     //array of strings containing color options for JComboBox colors
     private String colorMenu[]=
@@ -76,17 +80,23 @@ public class ApplicationFrame extends JFrame
         clear = new JButton("Clear");
         clear.setIcon(JBicons.clearII);
         jbRect = new JButton("Rectangle");
-        jbRect.setIcon(JBicons.squareII);
+        jbRect.setIcon(JBicons.rectangleII);
+        jbSquare = new JButton("Square");
+        jbSquare.setIcon(JBicons.squareII);
         jbEllipse = new JButton("Ellipse");
-        jbEllipse.setIcon(JBicons.circleII);
+        jbEllipse.setIcon(JBicons.ellipseII);
+        jbCircle = new JButton("Circle");
+        jbCircle.setIcon(JBicons.circleII);
         jbLine = new JButton("Line");
         jbLine.setIcon(JBicons.lineII);
         jbText = new JButton("Text");
         jbText.setIcon(JBicons.textII);
         selectShape = new JButton("Recolor Shape");
-        jbCircle = new JButton("Circle");
-        jbSquare = new JButton("Square");
         	jbTriangle = new JButton("Triangle");
+        	jbTriangle.setIcon(JBicons.triangleII);
+        	jbSave = new JButton("Save");
+        	jbSave.setIcon(JBicons.saveII);
+        	
         
         //create color combobox and label for it
         colorLabel = new JLabel("<html>Select Shape<br>Fill Color:</html>");
@@ -104,20 +114,22 @@ public class ApplicationFrame extends JFrame
         toolboxPadding.setLayout(new FlowLayout(FlowLayout.LEADING, 20, 5)); //sets padding around the edges
             
         // add widgets to widgetJPanel
-        toolboxPanel.add( undo );
-        toolboxPanel.add( redo );  
+        toolboxPanel.add(jbSave);
+        toolboxPanel.add( undo );   
         toolboxPanel.add( jbRect );
+        toolboxPanel.add(jbSquare);
         toolboxPanel.add(jbEllipse);
-        toolboxPanel.add(jbLine);
-        toolboxPanel.add(jbText);
         toolboxPanel.add(jbCircle);
+        toolboxPanel.add(jbTriangle);
+        toolboxPanel.add(jbLine); 
         toolboxPanel.add( clear );
+        toolboxPanel.add( redo ); 
+        toolboxPanel.add(jbText);
         toolboxPanel.add(colorLabel);
         toolboxPanel.add( colors );
         toolboxPanel.add( fillCheckBox );
-        toolboxPanel.add(selectShape);
-        toolboxPanel.add(jbSquare);
-        toolboxPanel.add(jbTriangle);
+        toolboxPanel.add(selectShape); 
+       
         
         // add toolbox to its padding panel
         toolboxPadding.add( toolboxPanel );
@@ -139,6 +151,7 @@ public class ApplicationFrame extends JFrame
         jbCircle.addActionListener(buttonHandler);
         jbTriangle.addActionListener(buttonHandler);
         
+        jbSave.addActionListener(buttonHandler);
         //create handlers for color combobox and filled checkbox
         ItemListenerHandler handler = new ItemListenerHandler();
         colors.addItemListener( handler );
@@ -188,6 +201,9 @@ public class ApplicationFrame extends JFrame
             else if (event.getActionCommand().equals("Triangle")){
                 canvas.setCurrentShapeType(6);
             }  
+            else if (event.getActionCommand().equals("Save")){
+                savePaint();
+            } 
              
         } // end method actionPerformed
     } // end private inner class ButtonHandler
@@ -220,5 +236,21 @@ public class ApplicationFrame extends JFrame
             
         } // end method itemStateChanged
     }
+
+	public void savePaint() {
+		// TODO Auto-generated method stub
+		try
+        {
+            BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics2D = image.createGraphics();
+            canvas.paint(graphics2D);
+            ImageIO.write(image,"jpeg", new File("/Users/aleishanelson/Desktop/SavePaintTest.jpeg"));
+        }
+        catch(Exception exception)
+        {
+            System.out.println(exception);
+        }
+		
+	}
     
 } // end class DrawFrame
