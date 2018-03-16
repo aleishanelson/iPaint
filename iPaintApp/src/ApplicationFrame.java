@@ -74,7 +74,7 @@ public class ApplicationFrame extends JFrame
         jbLine.setIcon(JBicons.lineII);
         jbText = new JButton("Text");
         jbText.setIcon(JBicons.textII);
-
+        //selectShape = new JButton("Recolor Shape");
         	jbTriangle = new JButton("Triangle");
         	jbTriangle.setIcon(JBicons.triangleII);
         	jbSave = new JButton("Save");
@@ -101,7 +101,6 @@ public class ApplicationFrame extends JFrame
         toolboxPanel.add(jbSquare);
         toolboxPanel.add(jbEllipse);
         toolboxPanel.add(jbCircle);
-
         toolboxPanel.add(jbTriangle); 
         toolboxPanel.add( clear );
         toolboxPanel.add( redo ); 
@@ -109,7 +108,6 @@ public class ApplicationFrame extends JFrame
         toolboxPanel.add(jbText);
         toolboxPanel.add( jbColorChooser );
         toolboxPanel.add( fillCheckBox );
-
        
         
         // add toolbox to its padding panel
