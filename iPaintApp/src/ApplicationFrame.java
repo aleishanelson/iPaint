@@ -91,10 +91,9 @@ public class ApplicationFrame extends JFrame
         jbLine.setIcon(JBicons.lineII);
         jbText = new JButton("Text");
         jbText.setIcon(JBicons.textII);
-        selectShape = new JButton("Recolor Shape");
         jbCircle = new JButton("Circle");
         jbSquare = new JButton("Square");
-        	jbTriangle = new JButton("Triangle");
+        jbTriangle = new JButton("Triangle");
         	
         	btnStart = new JButton("Start");
         	btnStop = new JButton("Stop");
@@ -120,24 +119,25 @@ public class ApplicationFrame extends JFrame
         toolboxPadding.setLayout(new FlowLayout(FlowLayout.LEADING, 20, 5)); //sets padding around the edges
             
         // add widgets to widgetJPanel
-        toolboxPanel.add( undo );
-        toolboxPanel.add( redo );  
+        toolboxPanel.add( jbSave);
+        toolboxPanel.add( undo );  
         toolboxPanel.add( jbRect );
-        toolboxPanel.add(jbEllipse);
-        toolboxPanel.add(jbLine);
-        toolboxPanel.add(jbText);
-        toolboxPanel.add(jbCircle);
-        toolboxPanel.add( clear );
-        toolboxPanel.add(colorLabel);
-        toolboxPanel.add( colors );
-        toolboxPanel.add( fillCheckBox );
-        toolboxPanel.add(animateCheckBox);
-        toolboxPanel.add(selectShape);
         toolboxPanel.add(jbSquare);
+        toolboxPanel.add( jbEllipse ); 
+        toolboxPanel.add(jbCircle);
         toolboxPanel.add(jbTriangle);
+        toolboxPanel.add(jbLine);
+        toolboxPanel.add( clear );
+        toolboxPanel.add( redo ); 
+        toolboxPanel.add(jbText);
+        toolboxPanel.add(font);
+        toolboxPanel.add(jbColorChooser);
+        toolboxPanel.add(fillCheckBox);
+        toolboxPanel.add(animateCheckBox);
         toolboxPanel.add(btnStart);
         toolboxPanel.add(btnStop);
-        toolboxPanel.add(font);
+        
+
         
         // add toolbox to its padding panel
         toolboxPadding.add( toolboxPanel );
