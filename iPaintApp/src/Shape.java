@@ -8,6 +8,7 @@ abstract class Shape
 {
     private int x1,y1,x2,y2; //coordinates of shape
     private Color color; // color of shape
+    public boolean reverse = false;
     
     /**
     * public constructor which takes no variables and
