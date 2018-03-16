@@ -43,7 +43,6 @@ abstract class Shape
     public void setX1(int x1)
     {
         this.x1=x1;
-        System.out.println("set x1: " + x1);
     }   
     
     /**
@@ -52,7 +51,6 @@ abstract class Shape
     public void setY1(int y1)
     {
         this.y1=y1;
-        System.out.println("set y1: " + y1);
     }   
     
     /**
@@ -61,7 +59,6 @@ abstract class Shape
     public void setX2(int x2)
     {
         this.x2=x2;
-        System.out.println("set x2: " + x2);
     }   
     
     /**
@@ -70,7 +67,6 @@ abstract class Shape
     public void setY2(int y2)
     {
         this.y2=y2;
-        System.out.println("set y2: " + y2);
     }   
     
     /**
