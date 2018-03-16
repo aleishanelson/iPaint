@@ -49,9 +49,7 @@ public class CanvasPanel extends JPanel
         addMouseMotionListener( handler ); 
     }
     
-    /**
-     * Calls the draw method for the existing shapes.
-     */
+    //PaintComponent method() to call the draw() method for shapes
     public void paintComponent( Graphics g )
     {
         super.paintComponent( g );
@@ -66,39 +64,32 @@ public class CanvasPanel extends JPanel
             currentShapeObject.draw(g);
     }
     
-    //Mutator methods for currentShapeType, currentShapeColor and currentShapeFilled
     
-    /**
-     * Sets the currentShapeType to type (0 for line, 1 for rect, 2 for oval) passed in.
-     */
+    
+    //MUTATORS  for currentShapeType, currentShapeColor and currentShapeFilled
+
+    //Sets the currentShapeType variable to type 
+    //(0 for Line, 1 for Rect, 2 for Oval, 3 for ... and so on according to shape array)
     public void setCurrentShapeType(int type)
     {
         currentShapeType=type;
     }
     
-    /**
-     * Sets the currentShapeColor to the Color object passed in.
-     * The Color object contains the color for the current shape.
-     */
+
+    //method to set the CurrentShapeColor variable to the color that is passed in from the JColorChooser
     public void setCurrentShapeColor(Color color)
     {
         currentShapeColor=color;
     }
-    
-    /**
-     * Sets the boolean currentShapeFilled to boolean filled passed in. 
-     * If filled=true, current shape is filled. 
-     * If filled=false, current shape is not filled.
-     */
+
+    //method to set booled 'filled' variable to true if shape should be filled with color, or false if it shouldn't.
     public void setCurrentShapeFilled(boolean filled)
     {
         currentShapeFilled=filled;
     }
     
-    
-    /**
-     * Clear the last shape drawn and calls repaint() to redraw the panel if clearedShapes is not empty
-     */
+   
+    //method to clear the last shape drawn, it calls the repatin() method to redraw the panel without that shape  
     public void clearLastShape()
     {
         if (! myShapes.isEmpty())
@@ -108,10 +99,8 @@ public class CanvasPanel extends JPanel
         }
     }
     
-    /**
-     * Redo the last shape cleared if clearedShapes is not empty
-     * It calls repaint() to redraw the panel.
-     */
+
+    //method to repaint() the last shape that was cleared from the canvas. upon clicking it redraws the panel
     public void redoLastShape()
     {
         if (! clearedShapes.isEmpty())
@@ -121,10 +110,8 @@ public class CanvasPanel extends JPanel
         }
     }
     
-    /**
-     * Remove all shapes in current drawing. Also makes clearedShapes empty since you cannot redo after clear.
-     * It called repaint() to redraw the panel.
-     */
+
+    //method to clear the entire canvas. It empties the clearedShapes array so you cannot do "redo" after clearing it
     public void clearDrawing()
     {
         myShapes.makeEmpty();
@@ -132,15 +119,13 @@ public class CanvasPanel extends JPanel
         repaint();
     }
     
-    /**
-     * Private inner class that implements MouseAdapter and does event handling for mouse events.
-     */
+
+    //method to handle all of the mouse events
     private class MouseHandler extends MouseAdapter 
     {
-        /**
-         * When mouse is pressed draw a shape object based on type, color and filled.
-         * X1,Y1 & X2,Y2 coordinate for the drawn shape are both set to the same X & Y mouse position.
-         */
+
+    	//When mouse is pressed down, draw the shape based on the variables passed in (shapeType, color, and filled)
+    	//x1, y1, x2, y2 are the coordinates for the drawn shape and are set to the same position
         public void mousePressed( MouseEvent event )
         {
             switch (currentShapeType) //0 for line, 1 for rect, 2 for oval
@@ -179,13 +164,17 @@ public class CanvasPanel extends JPanel
             }// end switch case
         } // end method mousePressed
         
-        /**
-         * When mouse is released set currentShapeObject's x2 & y2 to mouse pos.
-         * Then addFront currentShapeObject onto the myShapes dynamic Stack 
-         * and set currentShapeObject to null [clearing current shape object since it has been drawn].
-         * Lastly, it clears all shape objects in clearedShapes [because you cannot redo after a new drawing]
-         * and calls repaint() to redraw panel.
-         */
+
+        /*
+         Method to handle events that should happen when the mouse is released
+        
+        
+             Upon releasing the mouse, we set the current Shape's x2 and y2 coordinates to that specific mouse position
+             then we add to the front of the currentShapeObject stack and set currentShapeObject back to null (which clears the shape  object that was drawn)
+             then is clears ALL of the shape objects in 'clearedShapes" because we don't want to be able to do "redo" after drawing it. 
+             Lastly, it calls repaint() to draw the panel with the new shape  
+        */
+        
         public void mouseReleased( MouseEvent event )
         {
             //sets currentShapeObject x2 & Y2
