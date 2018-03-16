@@ -10,8 +10,8 @@ public class TestDraw
     {
         ApplicationFrame canvasGUI = new ApplicationFrame();
         
-        canvasGUI.setSize(new Dimension(1100, 800));
-        canvasGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        canvasGUI.setSize(new Dimension(1400, 900));
+
      
     } // end main
     

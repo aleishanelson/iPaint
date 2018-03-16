@@ -75,4 +75,9 @@ class LinkedList<T> {
         
         return shapeArray;
     }
+    
+    public ListNode<T> getFront() {
+    	return front;
+    }
+    
 }

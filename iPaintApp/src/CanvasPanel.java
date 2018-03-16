@@ -1,9 +1,12 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 
@@ -11,35 +14,37 @@ public class CanvasPanel extends JPanel
 {
     private LinkedList<Shape> myShapes; //dynamic stack of shapes
     private LinkedList<Shape> clearedShapes; //dynamic stack of cleared shapes from undo
+    private LinkedList<Shape> animatedShapes;  //dynamic stack of animated shapes
     
     //current Shape variables
     private int currentShapeType; //0 for line, 1 for rect, 2 for oval
     private Shape currentShapeObject; //stores the current shape object
     private Color currentShapeColor; //current shape color
     private boolean currentShapeFilled; //determine whether shape is filled or not
+    private boolean currentShapeAnimated; //determine whether shape is animated or not
+    public boolean stop = false;
+    private int fontSize = 10;
     
     JLabel statusLabel; //status label for mouse coordinates
     
-    /**
-     * This constructor initializes the dynamic stack for myShapes and clearedShapes.
-     * It sets the current shape variables to default values.
-     * It initalizes statusLabel from JLabel passed in.
-     * Sets up the panel and adds event handling for mouse events.
-     */
+ 
+    //CONSTRUCTOR to initialize the stack for shapes and clearedShapes
     public CanvasPanel(JLabel statusLabel){
         
         myShapes = new LinkedList<Shape>(); //initialize myShapes dynamic stack
         clearedShapes = new LinkedList<Shape>(); //initialize clearedShapes dynamic stack
+        animatedShapes = new LinkedList<Shape>(); //initialize animatedShapes dynamic stack
         
         //Initialize current Shape variables
         currentShapeType=1;
         currentShapeObject=null;
         currentShapeColor=Color.BLACK;
         currentShapeFilled=false;
+        currentShapeAnimated = false;
         
         this.statusLabel = statusLabel; //Initialize statusLabel
         
-        setLayout(new BorderLayout()); //sets layout to border layout; default is flow layout
+        setLayout(null); //sets layout to border layout; default is flow layout
         setBackground( Color.WHITE ); //sets background color of panel to white
         add( statusLabel, BorderLayout.SOUTH );  //adds a statuslabel to the south border
         
@@ -66,6 +71,58 @@ public class CanvasPanel extends JPanel
     
     
     
+    public void animateShapes() {
+		ArrayList<Shape> shapeArray = animatedShapes.getArray();
+		for(int counter = shapeArray.size() - 1; counter >= 0; counter--) {
+			Thread shapeThread = new Thread(new Animation());
+			Shape currentShape = shapeArray.get(counter);
+			int originalX1 = shapeArray.get(counter).getX1();
+			int originalX2 = shapeArray.get(counter).getX2();
+			//int animateX1 = originalX1;
+			//int animatex2 = originalX2;
+			Timer time = new Timer(5, (ActionListener) new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					animate(originalX1, originalX2, currentShape);
+				}
+			});
+			time.start();
+			shapeThread.run();
+		}
+    }  //end of animateShape()
+    
+    
+    public void animate(int originalX1, int originalX2, Shape shape) {
+		int X1 = shape.getX1();
+		int X2 = shape.getX2();
+		int vel = 2;
+		if(!stop) {
+			if(X1 < originalX1 || X2 > 1350) {
+				shape.reverse = !shape.reverse;
+				//vel = -vel;
+			}
+			if(shape.reverse) {
+				X1 = X1 - vel;
+    			X2 = X2 - vel;
+			}
+			else {
+				X1 = X1 + vel;
+				X2 = X2 + vel;
+			}
+			shape.setX1(X1);
+			shape.setX2(X2);
+			repaint();
+		}
+		else {
+			shape.setX1(originalX1);
+			shape.setX2(originalX2);
+			repaint();
+		}
+		
+    } //end of animate()
+    
+
+    
+    
     //MUTATORS  for currentShapeType, currentShapeColor and currentShapeFilled
 
     //Sets the currentShapeType variable to type 
@@ -81,11 +138,20 @@ public class CanvasPanel extends JPanel
     {
         currentShapeColor=color;
     }
+    
+    public void setFontSize(int size) {
+		fontSize = size;
+    }
 
     //method to set booled 'filled' variable to true if shape should be filled with color, or false if it shouldn't.
     public void setCurrentShapeFilled(boolean filled)
     {
         currentShapeFilled=filled;
+    }
+    
+    public void setCurrentShapeAnimate(boolean animated)
+    {
+    		currentShapeAnimated = animated;
     }
     
    
@@ -94,7 +160,13 @@ public class CanvasPanel extends JPanel
     {
         if (! myShapes.isEmpty())
         {
+        	if(myShapes.getFront().getData() instanceof TextBox) {
+        			System.out.println(((TextBox)myShapes.getFront().getData()).getTextBox());
+        			ApplicationFrame.canvas.remove(((TextBox)myShapes.getFront().getData()).getTextBox());
+        	}
+        		ApplicationFrame.canvas.revalidate();
             clearedShapes.addFront(myShapes.removeFront());
+            System.out.println(myShapes.getArray());
             repaint();
         }
     }
@@ -142,9 +214,11 @@ public class CanvasPanel extends JPanel
                     currentShapeObject= new Ellipse( event.getX(), event.getY(), 
                                                    event.getX(), event.getY(), currentShapeColor, currentShapeFilled);
                     break;
-                /*case 3:
-                    currentShapeObject= new Text();
-                    break; */
+                case 3:
+                    currentShapeObject = new TextBox(event.getX(), event.getY(),
+                										event.getX(), event.getY(), currentShapeColor, fontSize);
+                		
+                    break; 
                 case 4:
                     currentShapeObject= new Circle( event.getX(), event.getY(), 
                                                    event.getX(), event.getY(), currentShapeColor, currentShapeFilled);
@@ -177,15 +251,27 @@ public class CanvasPanel extends JPanel
         
         public void mouseReleased( MouseEvent event )
         {
+        
+        	
             //sets currentShapeObject x2 & Y2
             currentShapeObject.setX2(event.getX());
             currentShapeObject.setY2(event.getY());
             
+	if(currentShapeObject != null && currentShapeType == 3) {
+        		ApplicationFrame.canvas.add(((TextBox)currentShapeObject).getTextBox());
+        		
+        	}
             myShapes.addFront(currentShapeObject); //addFront currentShapeObject onto myShapes
+            System.out.println(myShapes.getArray());
+            
+            if(currentShapeAnimated) {
+            		animatedShapes.addFront(currentShapeObject);
+            }
             
             currentShapeObject=null; //sets currentShapeObject to null
             clearedShapes.makeEmpty(); //clears clearedShapes
             repaint();
+        	
             
         } // end method mouseReleased
         

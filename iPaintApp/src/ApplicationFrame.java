@@ -3,6 +3,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -12,6 +13,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,18 +34,23 @@ import java.awt.Dimension;
 public class ApplicationFrame extends JFrame
 {
 	private JLabel stausLabel; //label display mouse coordinates
-    private JButton undo, redo, clear;// selectShape; // buttons to undo, redo last shape drawn and to clear the canvas
+    private JButton undo, redo, clear;// buttons to undo, redo last shape drawn and to clear the canvas
     private JButton jbRect, jbEllipse, jbLine, jbText, jbSquare, jbCircle, jbTriangle, jbSave, jbColorChooser;  //buttons for selecting which shape the user wants to draw
-    private JCheckBox fillCheckBox; //checkbox to select whether or not to fill a shape with color
+    private JButton btnStart, btnStop;  //buttons to start and stop animated objects
+    private JCheckBox fillCheckBox, animateCheckBox; //checkbox to select whether or not to fill a shape with color
     private Color c;  //color variable to hold color value for shape fill    
     private JPanel toolboxPanel; //panel to hold buttons for drawing shapes and selecting colors
     private JPanel toolboxPadding; //adds padding around the toolbox panel
-    private CanvasPanel canvas; //canvas panel for drawing shapes
+    public static CanvasPanel canvas; //canvas panel for drawing shapes
     private Icons JBicons;
+    private JComboBox font; //combo box for selecting the size of font that goes into a text object
    
     //array of strings containing shape options for JComboBox shapes
     private String shapeOptions[]={"Line","Rectangle","Ellipse", "Text", "Circle", "Square", "Triangle"};
 
+    private String fontSize[] = {"10", "12", "14", "18", "20", "22", "26", "28", "30"};
+
+    
 //CONSTRUCTOR For Paint Application Frame    
     public ApplicationFrame()
     {
@@ -74,17 +82,24 @@ public class ApplicationFrame extends JFrame
         jbLine.setIcon(JBicons.lineII);
         jbText = new JButton("Text");
         jbText.setIcon(JBicons.textII);
-
+        //selectShape = new JButton("Recolor Shape");
         	jbTriangle = new JButton("Triangle");
         	jbTriangle.setIcon(JBicons.triangleII);
         	jbSave = new JButton("Save");
         	jbSave.setIcon(JBicons.saveII);
+        	
+        	btnStart = new JButton("Start");
+        	btnStop = new JButton("Stop");
+        	font = new JComboBox(fontSize);
         	
         
         jbColorChooser = new JButton("Select Fill Color");
         
         //create checkbox
         fillCheckBox = new JCheckBox( "Filled" );
+        
+      //create animate checkbox
+        animateCheckBox = new JCheckBox("Animate");
         
         //creates toolboxJPanel with a grid layout for canvas buttons
         toolboxPanel = new JPanel();
@@ -101,15 +116,17 @@ public class ApplicationFrame extends JFrame
         toolboxPanel.add(jbSquare);
         toolboxPanel.add(jbEllipse);
         toolboxPanel.add(jbCircle);
-
-        toolboxPanel.add(jbTriangle); 
-        toolboxPanel.add( clear );
-        toolboxPanel.add( redo ); 
+        toolboxPanel.add(jbTriangle);          
         toolboxPanel.add(jbLine);
+        toolboxPanel.add( clear );
+        toolboxPanel.add( redo );
         toolboxPanel.add(jbText);
+        toolboxPanel.add(font);
         toolboxPanel.add( jbColorChooser );
         toolboxPanel.add( fillCheckBox );
-
+        toolboxPanel.add(animateCheckBox);
+        toolboxPanel.add(btnStart);
+        toolboxPanel.add(btnStop);
        
         
         // add toolbox to its padding panel
@@ -132,6 +149,8 @@ public class ApplicationFrame extends JFrame
         jbCircle.addActionListener(buttonHandler);
         jbTriangle.addActionListener(buttonHandler); 
         jbSave.addActionListener(buttonHandler);
+        btnStart.addActionListener(buttonHandler);
+        btnStop.addActionListener(buttonHandler);
         
         
         //Action Listener for color selection button to set fill color for a shape
@@ -147,16 +166,35 @@ public class ApplicationFrame extends JFrame
         //create handlers for color combobox and filled checkbox
         ItemListenerHandler handler = new ItemListenerHandler();
         fillCheckBox.addItemListener( handler );
+        animateCheckBox.addItemListener(handler);
+        font.addItemListener(handler);
         
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int choose = JOptionPane.showConfirmDialog(null,
+                        "Do you really want to exit the application ?",
+                        "Confirm Close", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE);
+                if (choose == JOptionPane.YES_OPTION) {
+                    e.getWindow().dispose();
+                    System.out.println("close");
+                  
+                } else {
+                	setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                    //System.out.println("do nothing");
+                }
+            }
+        });	
+        
         setSize( 500, 500 );
         setVisible( true );
         
     } // end DrawFrame constructor
     
-    /**
-     * private inner class for button event handling
-     */
+   //button handler class
     private class ButtonHandler implements ActionListener
     {
         // handles button events
@@ -195,6 +233,13 @@ public class ApplicationFrame extends JFrame
             else if (event.getActionCommand().equals("Save")){
                 savePaint();
             } 
+            else if(event.getActionCommand().equals("Start")) {
+        			canvas.stop = false;
+        			canvas.animateShapes();
+            }
+            else if(event.getActionCommand().equals("Stop")) {
+        			canvas.stop = true;
+            }
              
         } // end method actionPerformed
     } // end private inner class ButtonHandler
@@ -211,6 +256,22 @@ public class ApplicationFrame extends JFrame
             {
                 boolean checkFill=fillCheckBox.isSelected() ? true : false; //
                 canvas.setCurrentShapeFilled(checkFill);
+            }
+            
+            if(event.getSource() == animateCheckBox) 
+            {
+            		boolean checkAnimate = animateCheckBox.isSelected() ? true : false;
+            		canvas.setCurrentShapeAnimate(checkAnimate);
+            }
+            
+         // determine whether combo box selected
+            if ( event.getStateChange() == ItemEvent.SELECTED )
+            {
+               
+                if(event.getSource() == font) {
+                		canvas.setFontSize(Integer.parseInt(fontSize[font.getSelectedIndex()]));
+                }
+     
             }
                       
         } // end method itemStateChanged
